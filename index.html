@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Inter:wght@300;400;500&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+   <title>面面俱到</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" />
+   <style>
+      /* 自定義響應式樣式 */
+      body {
+         font-family: 'Microsoft JhengHei', Arial, sans-serif;
+      }
+
+
+      body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('http://127.0.0.1:5500/ecommerce-shopping-cart-master/ecommerce-shopping-cart-master/sale.png');
+  background-repeat: repeat; /* 關鍵：讓圖片平鋪 */
+  background-size: 500px; /* 控制每個小圖的尺寸 */
+  filter: blur(5px); /* 模糊程度 */
+  opacity: 0.6; /* 透明度 */
+  z-index: -1; /* 確保在內容下方 */
+}
+      
+      .center-item {
+         display: flex;
+         align-items: center;
+         padding: 15px 0;
+      }
+      
+      .cart-item {
+         border-bottom: 1px solid #eee;
+         padding: 15px 0;
+      }
+      
+      .cart-item img {
+         max-width: 100px;
+         height: auto;
+         margin-right: 15px;
+      }
+      
+      .number-spinner {
+         width: 140px;
+         margin-right: 20px;
+      }
+      
+      .number-spinner .btn {
+         padding: 5px 12px;
+      }
+      
+      .number-spinner input {
+         text-align: center;
+      }
+      
+      .remove-item {
+         width: 20px;
+         cursor: pointer;
+      }
+      
+      .check-out {
+         width: 100%;
+         padding: 12px;
+         font-size: 18px;
+         font-weight: bold;
+      }
+      
+      .status h5 {
+         text-align: right;
+      }
+      
+      /* 手機版樣式 */
+      @media (max-width: 768px) {
+         .center-item {
+            flex-direction: column;
+            text-align: center;
+            padding: 10px 0;
+         }
+         
+         .cart-item img {
+            margin-right: 0;
+            margin-bottom: 10px;
+         }
+         
+         .number-spinner {
+            margin: 10px auto;
+         }
+         
+         .col-md-5.center-item, .col-md-7.center-item {
+            justify-content: center;
+         }
+         
+         h5 {
+            font-size: 16px;
+         }
+      }
+
+
+      :root {
+    --font-heading: 'Noto Sans TC', sans-serif; /* 標題 */
+    --font-body: 'Inter', sans-serif;          /* 正文 */
+    --font-numbers: 'Roboto', sans-serif;      /* 價格數字 */
+  }
+  
+  body {
+    font-family: var(--font-body);
+    font-weight: 400; /* 常規字重 */
+  }
+  
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-heading);
+    font-weight: 700; /* 粗體強調 */
+  }
+  
+  .price, #total-price, #sub-total {
+    font-family: var(--font-numbers);
+    font-weight: 500; /* 中等字重 */
+    letter-spacing: 0.5px; /* 數字間距微調 */
+  }
+  
+  button.check-out {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    letter-spacing: 1px; /* 按鈕文字稍寬 */
+  }
+
+  h2 {
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.price {
+  font-feature-settings: "tnum"; /* 等寬數字 */
+  color: #e53935; /* 紅色強調 */
+}
+/* 讓 modal 置於最上層 */
+#payment-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+}
+
+/* 背景遮罩 */
+#payment-modal::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: -1;
+}
+
+/* modal 內容框樣式 */
+.modal-content {
+  position: relative;
+  background: white;
+  width: 90%;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+   </style>
+</head>
+
+<body>
+   <section class="py-3">
+      <div class="container">
+      
+         <h2 class="text-center mb-4 bigtext">   <img src="logo.png" alt="" width="10%" height="10%">   面面俱到資料包<br>(限時特價‼️)</h2>
+         <div class="cart bg-white p-5 rounded shadow-sm">
+            <div class="row g-4">
+               <!-- 第一個商品 -->
+               <div class="col-12 cart-item">
+                  <div class="row align-items-center">
+                     <div class="col-md-7 d-flex align-items-center">
+                        <img src="sale.png" alt="面相識人課程" class="img-fluid me-3" >
+                        <h5 class="mb-0">面相識人課程|零基礎|小白自學|入門視頻|教程|快速識人|看透對方|讀心術</h5>
+                     </div>
+                     <div class="col-md-5 d-flex align-items-center justify-content-end">
+                        <div class="input-group number-spinner me-3">
+                           <button id="phone-minus" class="btn btn-outline-secondary"><i class="fas fa-minus"></i></button>
+                           <input id="phone-number" type="number" min="1" class="form-control text-center" value="1">
+                           <button id="phone-plus" class="btn btn-outline-secondary"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <h5 class="mb-0 me-3">$<span id="phone-total">2499</span></h5>
+     
+                     </div>
+                  </div>
+               </div>
+               
+               <!-- 第二個商品 -->
+               <div class="col-12 cart-item">
+                  <div class="row align-items-center">
+                     <div class="col-md-7 d-flex align-items-center">
+                        <img src="file.png" alt="易經資料合輯" class="img-fluid me-3">
+                        <h5 class="mb-0">易經、姓名學、麻衣神相精選資料合輯(免費贈送)</h5>
+                     </div>
+                     <div class="col-md-5 d-flex align-items-center justify-content-end">
+                        <div class="input-group number-spinner me-3">
+                           <button id="case-minus" class="btn btn-outline-secondary"><i class="fas fa-minus"></i></button>
+                           <input id="case-number" type="number" min="0" class="form-control text-center" value="1">
+                           <button id="case-plus" class="btn btn-outline-secondary"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <h5 class="mb-0 me-5">$<span id="case-total">0</span></h5>
+                    
+
+                     </div>
+                  </div>
+               </div>
+               
+               <!-- 結算區 -->
+               <div class="col-12 cart-item">
+                  <div class="row">
+                     <div class="col-6">
+                        <h5>總計:</h5>
+                        <h5>串流費:</h5>
+                        <h5 class="fw-bold">總total:</h5>
+                     </div>
+                     <div class="col-6 text-end">
+                        <h5>$<span id="sub-total">2499</span></h5>
+                        <h5>$<span id="tax-amount">0</span></h5>
+                        <h5 class="fw-bold">$<span id="total-price">2499</span></h5>
+                     </div>
+                  </div>
+               </div>
+               
+               <!-- 結帳按鈕 -->
+               <div class="col-12 pt-3">
+                  <button type="button" class="btn btn-success check-out w-100 py-3">立馬買單</button>
+                  <!-- 在「立馬下單」按鈕下方加入 -->
+<div id="payment-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999;">
+   <div style="background:#fff; width:90%; max-width:500px; margin:50px auto; padding:20px; border-radius:10px;">
+    <div class="infoform">
+      <h3 style="color: black;">請填寫付款資訊</h3>
+     <form id="payment-form">
+       <input type="email" placeholder="您的信箱" required style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd;">
+       <input type="text" placeholder="匯款帳號後五碼" maxlength="5" required style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd;">
+       <button class="infosend" type="submit" style="background:#4CAF50; color:#fff; border:none; padding:10px 20px; cursor:pointer;">確認送出</button>
+     </form>
+    </div>
+
+     <div id="bank-info" style="display:none; margin-top:20px; padding:15px; background:#f8f8f8; border-radius:5px;color: black;">
+       <h4>請轉帳至以下帳號：</h4>
+       <p>銀行：808 玉山銀行</p>
+       <p>帳號：0255-979-192181</p>
+       <p>金額：<span id="payment-amount">2499</span> 元</p>
+       <small>轉帳後系統將自動通知，請保留收據</small>
+     </div>
+   </div>
+ </div>
+ 
+
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   
+   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"></script>
+   <script src="app.js"></script>
+   <script>
+
+
+   // 顯示彈窗
+   document.querySelector('.check-out').addEventListener('click', function(e) {
+     e.preventDefault();
+     document.getElementById('payment-modal').style.display = 'block';
+
+
+
+     
+   });
+ 
+   // 表單提交
+   document.getElementById('payment-form').addEventListener('submit', async (e) => {
+     e.preventDefault();
+     document.getElementById('bank-info').style.display = 'block';
+     
+     // 獲取金額（從購物車）
+     const amount = document.getElementById('total-price').innerText;
+     document.getElementById('payment-amount').innerText = amount;
+     document.querySelector('.infoform').style.display = 'none';
+     // 這裡可加入 LINE 機器人通知
+ 
+  // 獲取表單資料（依您指定的選擇器）
+  const formData = {
+    email: $('input[type="email"]', this).val(),
+    last5: $('input[type="text"]', this).val(),
+    amount: $('#total-price').text()
+  };
+
+  // 發送 AJAX 請求
+  $.ajax({
+    url: 'https://script.google.com/macros/s/AKfycbylbzXLXsQWKKn0xMQh3NKwNzBUSkSKgjIznJEbVDShiQLIhKrb-6Z3VNnRDHuPhdCM/exec',
+    type: 'POST',
+    dataType: 'json',
+    contentType: 'application/json',
+    data: JSON.stringify(formData),
+    success: function(response) {
+      $('#bank-info').show(); // 顯示銀行資訊
+    },
+    error: function(xhr) {
+      alert('錯誤: ' + xhr.responseText);
+    }
+  });
+
+   });
+
+
+
+
+      // 设置黑底白字样式
+      document.body.style.backgroundColor = '#000';
+      document.body.style.color = '#fff';
+      document.body.style.fontFamily = 'Arial';
+      document.body.style.padding = '20px';
+      document.body.style.maxWidth = '800px';
+      document.body.style.margin = '0 auto';
+      
+      // 设置所有文字输入框的样式
+      const inputs = document.querySelectorAll('input');
+      inputs.forEach(input => {
+        input.style.backgroundColor = '#222';
+        input.style.color = '#fff';
+        input.style.border = '1px solid #333';
+      });
+      
+      // 设置所有按钮的样式
+      const buttons = document.querySelectorAll('button');
+      buttons.forEach(button => {
+        button.style.backgroundColor = '#333';
+        button.style.color = '#fff';
+        button.style.border = 'none';
+      });
+      
+    
+      
+      // 初始化样式
+      const items = document.querySelectorAll('.cart-item');
+      items.forEach(item => {
+        item.style.borderBottom = '1px solid #333';
+      });
+      
+      const checkoutBtn = document.querySelector('.check-out');
+      if(checkoutBtn) {
+        checkoutBtn.style.backgroundColor = '#4CAF50';
+        checkoutBtn.style.color = '#fff';
+        checkoutBtn.style.width = '100%';
+        checkoutBtn.style.padding = '15px';
+        checkoutBtn.style.border = 'none';
+      }
+      
+
+      // 强制所有h5元素文字颜色为黑色
+document.querySelectorAll('h5').forEach(h5 => {
+  h5.style.color = '#000';
+  h5.style.setProperty('color', '#000', 'important'); // 强制覆盖
+});
+
+
+document.querySelector('.bigtext').style.fontSize = '2.5rem';
+
+
+
+
+
+
+         </script>
+</body>
+</html>
