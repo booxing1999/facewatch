@@ -311,10 +311,10 @@
 
 
 $.ajax({
-  url: "https://script.google.com/macros/s/AKfycbwXQ5AOQsL1yx1Vsd8ia_vHSJ-9_-74M4hvEtc8-17kCrx1EczoUTKErY72rmavyoI_/exec",
+  url: "https://script.google.com/macros/s/AKfycbwjCB9030p9v_biKQLHeQ3A9vBoNm1o7aW7I17_wS0oLn_xVeeKbWmU2e25AVbnjHTY/exec",
   method: "post",
   contentType: "application/json",  // 保持 JSON 發送格式
-  dataType: "text",                 // 接受純文字格式回應
+  dataType: "jsonp",                 // 接受純文字格式回應
   data: {
     email: email,
     last5: last5,
