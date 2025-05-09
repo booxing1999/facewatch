@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Inter:wght@300;400;500&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
-   <title>面面俱到</title>
+   <title>面面俱道|說出你的命與理</title>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -143,38 +143,31 @@
   font-feature-settings: "tnum"; /* 等寬數字 */
   color: #e53935; /* 紅色強調 */
 }
-/* 讓 modal 置於最上層 */
-#payment-modal {
+
+.modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* 黑色遮罩，可選 */
   z-index: 9999;
 }
 
-/* 背景遮罩 */
-#payment-modal::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  z-index: -1;
-}
 
-/* modal 內容框樣式 */
+
 .modal-content {
-  position: relative;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background: white;
   width: 90%;
   max-width: 500px;
-  margin: 20px auto;
   padding: 20px;
   border-radius: 10px;
 }
+
 
    </style>
 </head>
@@ -245,13 +238,13 @@
                <div class="col-12 pt-3">
                   <button type="button" class="btn btn-success check-out w-100 py-3">立馬買單</button>
                   <!-- 在「立馬下單」按鈕下方加入 -->
-<div id="payment-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999;">
-   <div class="closeopen" style="background:#fff; width:90%; max-width:500px; margin:50px auto; padding:20px; border-radius:10px;">
+<div id="payment-modal"  class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999;">
+   <div class="closeopen modal-content" style="background:#fff; width:90%; max-width:500px; margin:50px auto; padding:20px; border-radius:10px;">
     <div class="infoform">
       <h3 style="color: black;">請填寫付款資訊</h3>
      <form id="payment-form">
-       <input type="email" placeholder="您的信箱" required style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd;">
-       <input type="text" placeholder="匯款帳號後五碼" maxlength="5" required style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd;">
+       <input type="email" placeholder="您的信箱(傳檔案使用)" required style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd;">
+       <input type="text" placeholder="後五碼(您匯款用的帳號)" maxlength="5" required style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd;">
        <button class="infosend" type="submit" style="background:#4CAF50; color:#fff; border:none; padding:10px 20px; cursor:pointer;">確認送出</button>
      </form>
     </div>
@@ -265,7 +258,8 @@
 
       <div style="margin-top:15px;">
          <button onclick="confirmTransfer()" style="margin-right:10px;">✅ 確認</button>
-         <button onclick="downloadBankInfo()">⬇️ 下載帳號資訊圖</button>
+         <button onclick="downloadBankInfo()" id="download-btn">⬇️ 下載帳號資訊圖</button>
+
       </div>
       </div>
    </div>
@@ -291,10 +285,8 @@
    document.querySelector('.check-out').addEventListener('click', function(e) {
      e.preventDefault();
      document.getElementById('payment-modal').style.display = 'block';
+   document.body.style.overflow = 'hidden';
 
-
-
-     
    });
  
    // 表單提交
@@ -423,6 +415,15 @@ setTimeout(() => {
       link.click();
     });
   }
+</script>
+<script>
+  // 偵測是否是手機
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+if (isMobile) {
+  document.getElementById('download-btn').style.display = 'none';
+}
+
 </script>
 
 </body>
