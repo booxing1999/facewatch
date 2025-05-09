@@ -304,26 +304,36 @@
      // 這裡可加入 LINE 機器人通知
  
   // 獲取表單資料（依您指定的選擇器）
-  const formData = {
-    email: $('input[type="email"]').val(),
-    last5: $('input[type="text"]').val(),
-    amount: $('#total-price').text()
-  };
 
-  // 發送 AJAX 請求
-  $.ajax({
-    url: 'https://script.google.com/macros/s/AKfycbxxizQ-iF0GrYpIdNa49Pi1KEbtNRFiABtZ-5656hJa2rVqqj37xCP0nsQHlUuqHr2j/exec',
-    type: 'POST',
-    dataType: 'json',
-    contentType: 'application/json',
-    data: JSON.stringify(formData),
-    success: function(response) {
-      $('#bank-info').show(); // 顯示銀行資訊
-    },
-    error: function(xhr) {
-      alert('錯誤: ' + xhr.responseText);
+    email= $('input[type="email"]').val()
+    last5= $('input[type="text"]').val()
+    amount2= $('#total-price').text()
+
+
+$.ajax({
+  url: "https://script.google.com/macros/s/AKfycbwXQ5AOQsL1yx1Vsd8ia_vHSJ-9_-74M4hvEtc8-17kCrx1EczoUTKErY72rmavyoI_/exec",
+  method: "post",
+  contentType: "application/json",  // 保持 JSON 發送格式
+  dataType: "text",                 // 接受純文字格式回應
+  data: {
+    email: email,
+    last5: last5,
+    amount2: amount2
+  },
+  success: function(response) {
+    console.log("回應:", response); // 字串格式的回應
+    try {
+      const jsonResponse = JSON.parse(response); // 手動解析為 JSON（如果回應是 JSON 格式）
+      console.log("JSON 解析：", jsonResponse);
+    } catch (error) {
+      console.error("回應不是有效的 JSON：", error);
     }
-  });
+  },
+  error: function(error) {
+    console.error("請求失敗:", error);
+  }
+});
+
 
    });
 
