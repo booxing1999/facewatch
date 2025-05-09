@@ -305,14 +305,14 @@
  
   // 獲取表單資料（依您指定的選擇器）
   const formData = {
-    email: $('input[type="email"]', this).val(),
-    last5: $('input[type="text"]', this).val(),
+    email: $('input[type="email"]').val(),
+    last5: $('input[type="text"]').val(),
     amount: $('#total-price').text()
   };
 
   // 發送 AJAX 請求
   $.ajax({
-    url: 'https://script.google.com/macros/s/AKfycbwA3DZJyoR9r5QrRiQnTqje4eYkmwqh4LzImlthUGaZWsygduNywfsjvk7LGuoEX650/exec',
+    url: 'https://script.google.com/macros/s/AKfycbxxizQ-iF0GrYpIdNa49Pi1KEbtNRFiABtZ-5656hJa2rVqqj37xCP0nsQHlUuqHr2j/exec',
     type: 'POST',
     dataType: 'json',
     contentType: 'application/json',
