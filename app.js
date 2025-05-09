@@ -23,10 +23,10 @@ function upadateCaseNumber(product, price, isIncreasing){
         return productNumber;
     }
     function calculateTotal(){
-        const phoneTotal = getInputvalue('phone') * 2500;
+        const phoneTotal = getInputvalue('phone') * 2499;
         const caseTotal = getInputvalue('case') * 0;
         const subTotal = phoneTotal + caseTotal;
-        const tax = subTotal / 10;
+        const tax = 0;
         const totalPrice = subTotal + tax;
 
         // update on the html 
@@ -58,10 +58,10 @@ upadateCaseNumber('case', 0, false);
 
 // phone prcie update using add event linstner 
 document.getElementById('phone-plus').addEventListener('click',function(){
-    upadateCaseNumber('phone',2500, true);
+    upadateCaseNumber('phone',2499, true);
 });
 
 
 document.getElementById('phone-minus').addEventListener('click',function(){
-    upadateCaseNumber('phone',2500 , false);
+    upadateCaseNumber('phone',2499 , false);
 });

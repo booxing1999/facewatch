@@ -246,7 +246,7 @@
                   <button type="button" class="btn btn-success check-out w-100 py-3">立馬買單</button>
                   <!-- 在「立馬下單」按鈕下方加入 -->
 <div id="payment-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999;">
-   <div style="background:#fff; width:90%; max-width:500px; margin:50px auto; padding:20px; border-radius:10px;">
+   <div class="closeopen" style="background:#fff; width:90%; max-width:500px; margin:50px auto; padding:20px; border-radius:10px;">
     <div class="infoform">
       <h3 style="color: black;">請填寫付款資訊</h3>
      <form id="payment-form">
@@ -256,13 +256,18 @@
      </form>
     </div>
 
-     <div id="bank-info" style="display:none; margin-top:20px; padding:15px; background:#f8f8f8; border-radius:5px;color: black;">
-       <h4>請轉帳至以下帳號：</h4>
-       <p>銀行：808 玉山銀行</p>
-       <p>帳號：0255-979-192181</p>
-       <p>金額：<span id="payment-amount">2499</span> 元</p>
-       <small>轉帳後系統將自動通知，請保留收據</small>
-     </div>
+      <div id="bank-info" style="display:none; margin-top:20px; padding:15px; background:#f8f8f8; border-radius:5px;color: black;">
+      <h4>請轉帳至以下帳號：</h4>
+      <p>銀行：808 玉山銀行</p>
+      <p>帳號：0255-979-192181</p>
+      <p>金額：<span id="payment-amount">2499</span> 元</p>
+      <small>轉帳後系統將自動通知，請保留收據</small>
+
+      <div style="margin-top:15px;">
+         <button onclick="confirmTransfer()" style="margin-right:10px;">✅ 確認</button>
+         <button onclick="downloadBankInfo()">⬇️ 下載帳號資訊圖</button>
+      </div>
+      </div>
    </div>
  </div>
  
@@ -311,7 +316,7 @@
 
 
 $.ajax({
-  url: "https://script.google.com/macros/s/AKfycbwjCB9030p9v_biKQLHeQ3A9vBoNm1o7aW7I17_wS0oLn_xVeeKbWmU2e25AVbnjHTY/exec",
+  url: "https://script.google.com/macros/s/AKfycbwOTYyi0hg2gfM4OZwgFlEHaN07eoZlv4O1-c4Iyn52-EdBg10iJcuQ_zFGVY-cA5rB/exec",
   method: "post",
   contentType: "application/json",  // 保持 JSON 發送格式
   dataType: "jsonp",                 // 接受純文字格式回應
@@ -397,5 +402,28 @@ document.querySelector('.bigtext').style.fontSize = '2.5rem';
 
 
          </script>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+  function confirmTransfer() {
+    // 隱藏 bank-info 區塊
+    document.querySelector(".closeopen").style.display = "none";
+document.body.style.cssText = 'pointer-events:none;opacity:0.4;filter:blur(5px);transition:all 0.5s ease';
+setTimeout(() => {
+  window.location.href = 'https://www.instagram.com/face_elephants_/';
+}, 300); // 0.5秒後轉址
+
+  }
+
+  function downloadBankInfo() {
+    const target = document.getElementById("bank-info");
+    html2canvas(target).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'bank-info.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  }
+</script>
+
 </body>
 </html>
